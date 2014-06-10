@@ -1,4 +1,6 @@
 package HelloWorld;
+import java.util.LinkedList;
+
 import Message.InvokeMessage;
 import Server.RemoteObjectReference;
 import Communcation.Client;
@@ -6,12 +8,18 @@ public class HelloWorld_Interface_stub implements HelloWorld_Interface{
 	RemoteObjectReference ror;
 	@Override
 	public String hellowitharg(String name) {
-		Object[] args = {name};
+		Object[] args = {name };
 		
 		return (String) invoke ("hellowitharg", args);
 		
 	}
-
+	@Override
+	public String hellowithreference(LinkedList<Character> list)
+	{
+		Object[] args = { list };
+		return (String) invoke ("hellowithreference", args);
+		
+	}
 	@Override
 	public String hellowithoutarg() {
 		// TODO Auto-generated method stub
@@ -43,6 +51,12 @@ public class HelloWorld_Interface_stub implements HelloWorld_Interface{
 	public RemoteObjectReference getror() {
 		// TODO Auto-generated method stub
 		return this.ror;
+	}
+	@Override
+	public String hellowithROR(HelloWorld_Interface a) {
+		Object[] args = {a.getror()};
+
+		return (String) invoke ("hellowithROR", args);
 	}
 	
 }

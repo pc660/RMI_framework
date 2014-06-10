@@ -2,6 +2,7 @@ package Server;
 
 import java.io.IOException;
 import java.net.UnknownHostException;
+import java.util.LinkedList;
 
 import HelloWorld.*;
 import RMIRegistry.*;
@@ -27,8 +28,17 @@ public class Main {
 			RMINaming name_server = new RMINaming ();
 			name_server.ipaddress = "127.0.0.1";
 			name_server.port = 1099;
+			//HelloWorld_Interface a= new HelloWorld_Interface();
 			HelloWorld_Interface hello = (HelloWorld_Interface) name_server.lookup("test");
-			String value = hello.hellowitharg("chaop");
+			LinkedList<Character> list = new LinkedList<Character>();
+			list.add('c');
+			list.add('h');
+			list.add('a');
+			list.add('o');
+			//list.add('p');
+			hello.hellowithreference(list);
+			String value = hello.hellowithROR(hello);
+			
 			System.out.println(value);
 		}
 		else if (args[0].equals("registry"))

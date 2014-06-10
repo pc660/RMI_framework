@@ -37,6 +37,7 @@ public class SocketListening extends Thread{
 				if (object_map.containsKey(obj_name))
 				{
 					Object callee = object_map.get(obj_name);
+					parseArgs(msg);
 					ClientHandler handler= new ClientHandler(callee, socket, msg);
 					handler.start();
 				}
@@ -53,6 +54,20 @@ public class SocketListening extends Thread{
 			
 		}
 	}
-	
+	public void parseArgs(InvokeMessage msg)
+	{
+		Object[] args = msg.args;
+		for (int i= 0; i< args.length ; i++)
+		{
+			if (args[i] instanceof RemoteObjectReference)
+			{
+				System.out.println("This is a remote reference");
+				args[i] = object_map.get( (  (RemoteObjectReference)args[i] ).get_obj_name());
+				msg.type[i] = args[i].getClass().getInterfaces()[0];
+			//	System.out.println(msg.type[i].getSimpleName());
+			}
+			//System.out.println(args[i].getClass().getSimpleName());
+		}
+	}
 	
 }
