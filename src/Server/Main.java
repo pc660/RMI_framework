@@ -1,5 +1,5 @@
 package Server;
-
+import StubGenerator.Stub_compiler;
 import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.LinkedList;
@@ -13,9 +13,10 @@ public class Main {
 		try {
 			SocketListening server = new SocketListening (8001);
 			HelloWorld hello = new HelloWorld();
-			
-			
+			Stub_compiler compiler = new Stub_compiler("src/HelloWorld/HelloWorld_Interface.java");
+			compiler.generate_stub();
 			server.object_map.put("test", hello);
+			
 			server.start();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -51,6 +52,7 @@ public class Main {
 		
 			server.start();
 		}
+		
 		
 	}
 }

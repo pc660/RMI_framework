@@ -52,6 +52,12 @@ public class HelloWorld implements HelloWorld_Interface{
 		System.out.println(count);
 		return "say hello "  + "reference" ;
 	}
+
+	@Override
+	public String hellowithtest(String name, LinkedList<Character> list) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 
 }
