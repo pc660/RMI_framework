@@ -58,6 +58,34 @@ public class Stub_compiler {
 		}
 		
 	}
+	private String removeString2(String s)
+	{
+		String str = "";
+		int count = 0;
+		for (int i = 0; i< s.length() ; i++)
+		{
+			char c = s.charAt(i);
+			if (c!= '(' && c!=')'  && c != ',' && count == 0)
+			{
+				str = str + c;
+			}
+			else if (c == ',')
+			{
+				str = str + ' ';
+			}
+			else if (c == '(')
+			{
+				count = 1;
+			}
+			else if (c == ')')
+			{
+				count = 0;
+				str = str + " ";
+			}
+		}
+		str = str.trim();
+		return str ;
+	}
 	private String removeString (String s)
 	{
 		String str = "";
@@ -295,18 +323,22 @@ public class Stub_compiler {
 	    		{
 	    			int pos = s.indexOf("{");
 	    			String str = s.substring(pos+1);
+	    			interface_code.add(str);
+	    			str = removeString2(str);
 	    			ArrayList<String> res = parseString (str);
 	    			return_type.add(res.get(1));
 	    			interface_name.add(res.get(2));
-	    			interface_code.add(str);
+	    			
 	    			break;
 	    		}
 	    		
 	    		else if (ss.equals("public")  && !s.contains("{"))
 	    		{
 	    			interface_code.add(s);
+	    			s = removeString2(s);
 	    			
 	    			ArrayList<String> res = parseString (s);
+	    			
 	    			return_type.add(res.get(1));
 	    			interface_name.add(res.get(2));
 	    			break;
