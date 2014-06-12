@@ -23,7 +23,7 @@ public class HelloWorld_Interface_stub implements HelloWorld_Interface{
 	}
 	@Override
 	public String hellowithROR (HelloWorld_Interface a){
-		Object []args = { a};
+		Object []args = { a.getror()};
 		return (String) invoke("hellowithROR", args);
 	}
 	@Override

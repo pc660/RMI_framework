@@ -8,7 +8,7 @@ import java.net.UnknownHostException;
 import Message.*;
 public class Client extends comm{
 	
-	
+	private static SocketCache cache = new SocketCache(10);
 	public static LookupMessage lookup(String ipaddress, int port, LookupMessage msg) throws UnknownHostException, IOException, ClassNotFoundException
 	{
 		//socket cache
@@ -27,29 +27,87 @@ public class Client extends comm{
 	
 	public static Object connect_to_server (InvokeMessage msg)
 	{
+		
 		String ipaddress = msg.ror.ipaddress;
 		int port = msg.ror.port;
-		
-		try {
-			Socket socket = new Socket(ipaddress, port);
-			ObjectOutputStream output = new ObjectOutputStream(socket.getOutputStream());
-			output.writeObject(msg);
-			output.flush();
-			ObjectInputStream input = new ObjectInputStream(socket.getInputStream());
-			InvokeMessage reply = (InvokeMessage) input.readObject();
-			return reply.return_value;
+		//get cache
+		String key = ipaddress + ":" + port;
+		if (cache.containsKey(key))
+		{
 			
-		} catch (UnknownHostException e) {
+			try {
+				SocketInfo socket_info = cache.get(key);
+				ObjectOutputStream output = new ObjectOutputStream(socket_info.socket.getOutputStream());
+				output.writeObject(msg);
+				output.flush();
+				ObjectInputStream input = new ObjectInputStream(socket_info.socket.getInputStream());
+				InvokeMessage reply = (InvokeMessage) input.readObject();
+				return reply.return_value;
+			} catch (IOException e) {
+				
+				try {
+					exceptionHandler(ipaddress, port, msg, key);
+				} catch (UnknownHostException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				} catch (IOException e1) {
+					System.out.println("Failed to connect the server");
+					e1.printStackTrace();
+				} catch (ClassNotFoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				
+				
+				
+				e.printStackTrace();
+			} catch (ClassNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		}
+		else
+		{
+			try {
+			
+				Socket socket = new Socket(ipaddress, port);
+				
+				ObjectOutputStream output = new ObjectOutputStream(socket.getOutputStream());
+				output.writeObject(msg);
+				output.flush();
+				ObjectInputStream input = new ObjectInputStream(socket.getInputStream());
+				SocketInfo info = new SocketInfo (socket, output, input);
+				cache.set(key, info);
+				InvokeMessage reply = (InvokeMessage) input.readObject();
+				return reply.return_value;
+				
+			} catch (UnknownHostException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
+				System.out.println("Failed to connect the server");
+				e.printStackTrace();
+			} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+				e.printStackTrace();
+			}
 		}
 		return null;
 		
+	}
+	public static Object exceptionHandler(String ipaddress, int port , InvokeMessage msg, String key) throws UnknownHostException, IOException, ClassNotFoundException
+	{
+		Socket socket = new Socket(ipaddress, port);
+		
+		ObjectOutputStream output = new ObjectOutputStream(socket.getOutputStream());
+		output.writeObject(msg);
+		output.flush();
+		ObjectInputStream input = new ObjectInputStream(socket.getInputStream());
+		SocketInfo info = new SocketInfo (socket, output, input);
+		cache.set(key, info);
+		InvokeMessage reply = (InvokeMessage) input.readObject();
+		return reply.return_value;
 	}
 }

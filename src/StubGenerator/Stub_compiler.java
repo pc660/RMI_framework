@@ -7,6 +7,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.lang.*;
 
 import Communcation.Client;
 import HelloWorld.HelloWorld_Interface;
@@ -229,10 +230,39 @@ public class Stub_compiler {
 			bw.write("	" + s + "{\n");
 			ArrayList<String> parameter_name  = parseInterface (s);
 			String parameters = "{ ";
+			String new_package_code = package_code.substring(7);
+			new_package_code = new_package_code.trim();
 			for (int i = 1 ; i < parameter_name.size() ; i = i+2)
 			{
-				parameters = parameters + parameter_name.get(i);
-				parameters += ",";
+				try {
+					
+					 String str = Class.forName(new_package_code + "."+parameter_name.get(i-1)).getInterfaces()[0].getSimpleName();
+					
+//					System.out.println();
+					
+					//class_name.newInstance();
+				//	class_name.
+				//	Object a =class_name.newInstance();
+				//	String str = a.getClass().getSuperclass().toString();
+				//	System.out.println(str);
+					if (str.equals("MyRemote"))
+					{
+						parameters = parameters +  parameter_name.get(i) + ".getror()," ;
+					}
+					else
+					{
+						parameters = parameters + parameter_name.get(i);
+						parameters += ",";
+					}
+				} catch (ClassNotFoundException e) {
+					// TODO Auto-generated catch block
+					//System.out.println("Falied to generate stub because "+ new_package_code + "."+parameter_name.get(i-1)+ " class not found");
+					parameters = parameters + parameter_name.get(i);
+					parameters += ",";
+					
+				} 
+				
+				
 			}
 			parameters = parameters.substring(0, parameters.length()-1);
 			parameters += "}";

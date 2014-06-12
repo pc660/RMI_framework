@@ -43,6 +43,7 @@ public class HelloWorld implements HelloWorld_Interface{
 			{
 				name = name + c;
 			}
+			System.out.println("say hello with reference");
 			return "say hello " + name;
 	}
 

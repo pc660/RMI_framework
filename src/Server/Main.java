@@ -3,7 +3,7 @@ import StubGenerator.Stub_compiler;
 import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.LinkedList;
-
+import java.lang.*;
 import HelloWorld.*;
 import RMIRegistry.*;
 public class Main {
@@ -13,6 +13,8 @@ public class Main {
 		try {
 			SocketListening server = new SocketListening (8001);
 			HelloWorld hello = new HelloWorld();
+			//Class<?> class_name = Class.forName("HelloWorld.HelloWorld_Interface");
+			
 			Stub_compiler compiler = new Stub_compiler("src/HelloWorld/HelloWorld_Interface.java");
 			compiler.generate_stub();
 			server.object_map.put("test", hello);
@@ -37,8 +39,8 @@ public class Main {
 			list.add('a');
 			list.add('o');
 			//list.add('p');
-			hello.hellowithreference(list);
-			String value = hello.hellowithROR(hello);
+			String value = hello.hellowithreference(list);
+			value = hello.hellowithROR(hello);
 			
 			System.out.println(value);
 		}
