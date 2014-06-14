@@ -1,13 +1,18 @@
 package Server;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.io.Serializable;
 import java.io.Writer;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.Socket;
 import java.net.URL;
 
 import org.omg.CORBA.portable.InputStream;
@@ -22,7 +27,7 @@ public class RemoteObjectReference implements Serializable{
 	
 	//name for registing 
 	public String obj_name;
-	
+	public int download_port;
 	//for downloading stub
 	public String Stub_URL;
 	public RemoteObjectReference(String ip, int port, String interface_name, 
@@ -77,26 +82,31 @@ public class RemoteObjectReference implements Serializable{
 	}
 	public void download(String fileName) throws IOException
 	{
-		URL url = new URL(Stub_URL);
-        HttpURLConnection httpConn = (HttpURLConnection) url.openConnection();
-        int responseCode = httpConn.getResponseCode();
-        
-        if (responseCode == HttpURLConnection.HTTP_OK) {
-        	BufferedReader input = new BufferedReader( new InputStreamReader( httpConn.getInputStream() ) );
+		Socket socket = new Socket (ipaddress, download_port);
+		BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+		PrintWriter out = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()));
+		out.write(fileName);;
+		out.flush();
+		File file = new File("./bin/" + fileName +".class");
+		if (!file.exists()) {
+			file.createNewFile();
+		}
 
-        	Writer writer = new OutputStreamWriter( new FileOutputStream( "./"+ fileName + ".class" ) );
-
-        	int c;
-
-        	while( ( c = input.read() ) != -1 ) {
-
-        	   writer.write( (char)c );
-        	}
-
-        	writer.close();
-
-        	input.close();
-        	
-            }
+		FileWriter fw = new FileWriter(file.getAbsoluteFile());
+		BufferedWriter bw = new BufferedWriter(fw);
+		
+		String response = "";
+		try {
+			while(( response = in.readLine() ) != null)	
+			{
+				//System.out.println(response);
+				bw.write(response +"\n");
+					
+			}
+			bw.close();
+		} catch (IOException e) {
+			bw.close();
+			e.printStackTrace();
+		}
 	}
 }
