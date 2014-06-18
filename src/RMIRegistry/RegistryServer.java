@@ -17,6 +17,25 @@ public class RegistryServer extends Thread{
 	{
 		ror_map = new HashMap<String, RemoteObjectReference> ();
 	}
+	@Override
+	public void run()
+	{
+		try {
+			socket = new ServerSocket(this.port);
+			System.out.println("Registry Server begins to work");
+			while(true)
+			{
+				Socket client = socket.accept();
+				System.out.println("Registry server connected " + client.toString());
+				socket_handler handler = new socket_handler(client);
+				handler.start();
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
 	private class socket_handler extends Thread
 	{
 		Socket client;
@@ -28,8 +47,12 @@ public class RegistryServer extends Thread{
 		public void run()
 		{
 			try {
+				
+				System.out.println("SocketHandler: try to get input stream");
 				ObjectInputStream input =  new ObjectInputStream(client.getInputStream());
+				System.out.println("SocketHandler:got input stream");
 				Object obj = input.readObject();
+				System.out.println("SocketHandler:got input object");
 				//System.out.println(obj);
 				
 				
@@ -68,6 +91,7 @@ public class RegistryServer extends Thread{
 				//message register
 				else if (name.getSimpleName().equals("RegisterMessage"))
 				{
+					System.out.println("Registry: register message got");
 					RegisterMessage reg = (RegisterMessage) obj;
 					ror_map.put(reg.obj_name(), reg.ror);
 					System.out.println("successfully registered " + reg.obj_name());
@@ -88,24 +112,6 @@ public class RegistryServer extends Thread{
 			
 		}
 	}
-	@Override
-	public void run()
-	{
-		try {
-			socket = new ServerSocket(this.port);
-			System.out.println("Registry Server begins to work");
-			while(true)
-			{
-				Socket client = socket.accept();
-				System.out.println("Registry server connected");
-				socket_handler handler = new socket_handler(client);
-				handler.start();
-			}
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-	}
+
 	
 }
