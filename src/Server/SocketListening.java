@@ -1,8 +1,12 @@
 package Server;
 
+
+import Server.RemoteObjectReference;
+
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
@@ -12,15 +16,16 @@ import java.util.HashMap;
 import Message.InvokeMessage;
 
 public class SocketListening extends Thread{
-	
-	ServerSocket server; 
+	public ServerSocket server; 
 	int port;
-	HashMap<String, Object> object_map ;
+	public HashMap<String, Object> object_map ;
 	public SocketListening (int port) throws IOException
 	{
 		server = new ServerSocket (port);
 		object_map = new HashMap<String, Object>();
 	}
+	
+	
 	@Override
 	public void run()
 	{
@@ -31,10 +36,7 @@ public class SocketListening extends Thread{
 				
 				System.out.println("connected");
 				ClientHandler handler =  new ClientHandler( socket);
-				handler.start();
-				
-				
-				
+				handler.start();			
 				
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
