@@ -29,6 +29,7 @@ public class Main {
 		try {
 			SocketListening server = new SocketListening (8001);
 			HelloWorld hello = new HelloWorld();
+			RemoteObjectReference test = new RemoteObjectReference("127.0.0.1", 8001, "HelloWorld_Interface", "test", "HelloWorld/HelloWorld_Interface_stub", 8002);
 			//Class<?> class_name = Class.forName("HelloWorld.HelloWorld_Interface");
 			
 		//	Stub_compiler compiler = new Stub_compiler("src/HelloWorld/HelloWorld_Interface.java");
