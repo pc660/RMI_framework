@@ -5,8 +5,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.net.UnknownHostException;
 
-import Communcation.Server;
 import HelloWorld.HelloWorld;
+import HelloWorld.HelloWorld_Interface;
 import MyRemote.MyRemote;
 import RMIRegistry.RMINaming;
 import RMIRegistry.RegistryServer;
@@ -17,12 +17,13 @@ public class Main {
 		if (args[0].equals("server")) {
 
 			HelloWorld hello = new HelloWorld();
-			Server server = new Server(8001, "127.0.0.1", 1099);
+			ServerInfo server = new ServerInfo(8001, 8002,  "127.0.0.1", 1099);
+			//System.out.println(server.clientForRig.getInetAddress().toString());
 			RemoteObjectReference ror = new RemoteObjectReference(
 					server.clientForRig.getInetAddress().toString(), 8001,
-					"HelloWorld_Interface", "hello", "HelloWorld,HelloWorld_Interface_stub", 8002);
-
-			server.registerROR("hello", ror);
+					"HelloWorld.HelloWorld_Interface", "hello", "HelloWorld,HelloWorld_Interface_stub", 8002);
+			
+			server.registerROR("hello", ror, hello);
 			// SocketListening server = new SocketListening (8001);
 
 			// Class<?> class_name =
@@ -49,8 +50,9 @@ public class Main {
 			RMINaming name_server = new RMINaming();
 			name_server.ipaddress = "127.0.0.1";
 			name_server.port = 1099;
-			MyRemote result = name_server.lookup("hello");
-
+			HelloWorld_Interface result = (HelloWorld_Interface)name_server.lookup("hello");
+			String value = result.hellowitharg("test");
+			System.out.println(value);
 			// HelloWorld_Interface a= new HelloWorld_Interface();
 			// HelloWorld_Interface hello = (HelloWorld_Interface)
 			// name_server.lookup("test");

@@ -32,7 +32,7 @@ public class RemoteObjectReference implements Serializable{
 	public String Stub_URL;
 	public RemoteObjectReference(String ip, int port, String interface_name, 
 			String obj_name, String Stub_URL, int download_port) {
-		this.ipaddress = ip;
+		this.ipaddress = ip.substring(1);
 		this.port = port;
 		this.Interface_name = interface_name;
 		this.obj_name = obj_name;

@@ -40,7 +40,7 @@ public class InvokeMessage extends Message {
 	public InvokeMessage invoke( Object caller)
 	{
 		Method method = null;
-		
+	//	System.out.println(method_name);
 		try {
 			method = caller.getClass().getMethod(method_name, type);
 		} catch (SecurityException e) {

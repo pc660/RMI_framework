@@ -16,38 +16,9 @@ import Server.RemoteObjectReference;
 import Server.SocketListening;
 
 public class Server {
-	public int port;
-	public SocketListening socketListener;
-	public Socket clientForRig = null;
-	public ObjectOutputStream outObj;
-	public ObjectInputStream inObj;	
+	
 
-	public Server(int localPort, String registryHostname, int registryServerPort) {
-		this.port = localPort;
-		socketListener = startASocket();
-		if (socketListener != null) {
-			socketListener.start();
-			System.out.println("Server: start a socket linsterner");
-		} else {
-			System.out.println("socketListener IS NULL");
-		}
-		clientForRig = connectToRigster(registryHostname, registryServerPort);
-		System.out.println("Server: get a clientForReg"+clientForRig.toString() );
-
-	}
-
-	private SocketListening startASocket() {
-		SocketListening socket = null;
-		try {
-			socket = new SocketListening (port);	
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			System.out.println("Socket start failed");
-		}	
-		return socket;
-	}
-
-	private Socket connectToRigster(String registryHostname, int port) {
+	public static Socket connectToRigster(String registryHostname, int port) {
 		Socket socket = null;
 		try {
 			socket = new Socket(InetAddress.getByName(registryHostname), port);
@@ -59,7 +30,7 @@ public class Server {
 
 	}
 
-	public void registerROR(String name, RemoteObjectReference ror) throws IOException {
+	public static void registerROR(  String name, RemoteObjectReference ror, Socket clientForRig) throws IOException {
 		
 		System.out.println("Server: start register ror");
 		ObjectOutputStream out = new ObjectOutputStream(clientForRig.getOutputStream());
@@ -75,7 +46,7 @@ public class Server {
 		}
 
 
-		socketListener.object_map.put(name, ror);
-		System.out.println("Server: ror sent");
+	//	socketListener.object_map.put(name, ror);
+	//	System.out.println("Server: ror sent");
 	}
 }

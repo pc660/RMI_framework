@@ -70,7 +70,8 @@ public class Client extends comm{
 		else
 		{
 			try {
-			
+				System.out.println(ipaddress);
+				System.out.println(port);
 				Socket socket = new Socket(ipaddress, port);
 				
 				ObjectOutputStream output = new ObjectOutputStream(socket.getOutputStream());
