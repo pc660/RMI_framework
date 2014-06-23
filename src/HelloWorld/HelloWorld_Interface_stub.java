@@ -34,6 +34,7 @@ public class HelloWorld_Interface_stub implements HelloWorld_Interface{
 	public Object invoke(String function, Object[] args){
 		InvokeMessage message = new InvokeMessage(function, args);
 		message.ror = this.ror;
+//		System.out.println(ror.ipaddress)m;
 		Object return_value = Client.connect_to_server(message);
 		return return_value;
 	}

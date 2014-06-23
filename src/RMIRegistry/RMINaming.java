@@ -36,7 +36,7 @@ public class RMINaming {
 			LookupMessage reply = Client.lookup(ipaddress, port, look);
 			System.out.println("finished look up in naming");
 			//System.out.println(reply.ror);
-			
+//			System.out.println("234\n");
 			MyRemote remote = reply.ror.localize();
 			remote.setror(reply.ror);
 			//System.out.print(reply.ror.ipaddress);

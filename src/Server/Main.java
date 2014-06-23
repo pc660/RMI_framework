@@ -5,6 +5,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.net.UnknownHostException;
 
+import Communcation.Client;
 import HelloWorld.HelloWorld;
 import HelloWorld.HelloWorld_Interface;
 import MyRemote.MyRemote;
@@ -17,13 +18,14 @@ public class Main {
 		if (args[0].equals("server")) {
 
 			HelloWorld hello = new HelloWorld();
-			ServerInfo server = new ServerInfo(8001, 8002,  "127.0.0.1", 1099);
+			ServerInfo server = new ServerInfo(8003, 8004,  "127.0.0.1", 1099);
 			//System.out.println(server.clientForRig.getInetAddress().toString());
 			RemoteObjectReference ror = new RemoteObjectReference(
-					server.clientForRig.getInetAddress().toString(), 8001,
-					"HelloWorld.HelloWorld_Interface", "hello", "HelloWorld,HelloWorld_Interface_stub", 8002);
-			
-			server.registerROR("hello", ror, hello);
+					"127.0.0.1", 8003,
+					"HelloWorld.HelloWorld_Interface", "hello1", 
+					"HelloWorld,HelloWorld_Interface_stub", 8004);
+			//System.out.println(ror.ipaddress);
+			server.registerROR(ror.obj_name, ror, hello);
 			// SocketListening server = new SocketListening (8001);
 
 			// Class<?> class_name =
@@ -46,13 +48,25 @@ public class Main {
 			 * System.out.println(result.ror.ipaddress.toString() + ":"
 			 * +result.ror.port);
 			 */
-
+			
 			RMINaming name_server = new RMINaming();
 			name_server.ipaddress = "127.0.0.1";
 			name_server.port = 1099;
 			HelloWorld_Interface result = (HelloWorld_Interface)name_server.lookup("hello");
-			String value = result.hellowitharg("test");
+			String value = result.hellowitharg("test1");
 			System.out.println(value);
+			String value2 = result.hellowitharg("test2");
+			System.out.println(value2);
+			
+			
+			HelloWorld_Interface result1 = (HelloWorld_Interface)name_server.lookup("hello1");
+			String value3 = result1.hellowitharg("test3");
+			System.out.println(value3);
+			Client.cache.get("127.0.0.1:8003").socket.close();
+			String value4 = result1.hellowitharg("test4");
+			System.out.println(value4);
+			
+			
 			// HelloWorld_Interface a= new HelloWorld_Interface();
 			// HelloWorld_Interface hello = (HelloWorld_Interface)
 			// name_server.lookup("test");

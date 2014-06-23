@@ -102,12 +102,12 @@ public class SocketCache {
 			oldNode.output = value.output;
 			InvokeMessage msg = new InvokeMessage ();
 			msg.method_name = null;
-			try {
+			/*try {
 				output.writeObject(msg);
 			} catch (IOException e) {
 				System.out.println("Cannot connect to server");
 				e.printStackTrace();
-			}
+			}*/
 			removeNode(oldNode);
 			setHead(oldNode);
 		} else {

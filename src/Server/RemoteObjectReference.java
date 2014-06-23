@@ -32,7 +32,7 @@ public class RemoteObjectReference implements Serializable{
 	public String Stub_URL;
 	public RemoteObjectReference(String ip, int port, String interface_name, 
 			String obj_name, String Stub_URL, int download_port) {
-		this.ipaddress = ip.substring(1);
+		this.ipaddress = ip.substring(0);
 		this.port = port;
 		this.Interface_name = interface_name;
 		this.obj_name = obj_name;
@@ -56,11 +56,13 @@ public class RemoteObjectReference implements Serializable{
 		Class<?> name;
 		try {
 			name = Class.forName(this.Interface_name + "_stub");
+//			System.out.println(this.Interface_name + "_stub");
 			Object obj = name.newInstance();
 			return (MyRemote)obj;	
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			try {
+				System.out.println("Start downloading file:" + this.Interface_name + "_stub");
 				download(this.Interface_name + "_stub");
 				System.out.println("Finish downloading file");
 				

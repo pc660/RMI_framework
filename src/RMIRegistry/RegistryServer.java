@@ -62,8 +62,8 @@ public class RegistryServer extends Thread{
 				{
 					//deal with look up
 					LookupMessage look = (LookupMessage) obj;
-					//System.out.println(look.obj_name);
-					//System.out.println(ror_map);
+					System.out.println(look.obj_name);
+					System.out.println(ror_map);
 					String obj_name = look.obj_name;
 					//System.out.println(obj_name);
 					
