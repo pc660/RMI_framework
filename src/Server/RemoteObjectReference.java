@@ -90,7 +90,15 @@ public class RemoteObjectReference implements Serializable{
 		PrintWriter out = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()));
 		out.write(fileName);;
 		out.flush();
-		File file = new File("./bin/" + fileName +".class");
+		String []args = fileName.split(".");
+		String directory = "";
+		for (int i = 0; i< args.length -1 ; i++)
+		{
+			directory = args[i] + "/'";
+		}
+		String new_name = directory + args[args.length-2] + ".class";
+		
+		File file = new File("./bin/" + new_name );
 		if (!file.exists()) {
 			file.createNewFile();
 		}
