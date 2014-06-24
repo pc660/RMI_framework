@@ -31,11 +31,16 @@ public class HelloWorld_Interface_stub implements HelloWorld_Interface{
 		Object []args = { name,list};
 		return (String) invoke("hellowithtest", args);
 	}
+	@Override
+	public HelloWorld_Interface helloreturnobject (){
+		Object []args = {};
+		return (HelloWorld_Interface) invoke("helloreturnobject", args);
+	}
 	public Object invoke(String function, Object[] args){
 		InvokeMessage message = new InvokeMessage(function, args);
 		message.ror = this.ror;
-//		System.out.println(ror.ipaddress)m;
 		Object return_value = Client.connect_to_server(message);
+		
 		return return_value;
 	}
 	@Override

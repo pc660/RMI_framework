@@ -12,6 +12,7 @@ import java.net.Socket;
 import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.util.HashMap;
+import java.util.Random;
 
 import Message.InvokeMessage;
 
@@ -23,6 +24,7 @@ public class SocketListening extends Thread{
 	{
 		server = new ServerSocket (port);
 		object_map = new HashMap<String, Object>();
+		//System.out.println(server.);
 	}
 	
 	
@@ -39,8 +41,10 @@ public class SocketListening extends Thread{
 				handler.start();			
 				
 			} catch (IOException e) {
+				
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+				continue;
 			} 
 			
 		}
@@ -60,7 +64,27 @@ public class SocketListening extends Thread{
 			//System.out.println(args[i].getClass().getSimpleName());
 		}
 	}
-	
+	public  String generateString(Random rng, String characters, int length)
+	{
+	    char[] text = new char[length];
+	    for (int i = 0; i < length; i++)
+	    {
+	        text[i] = characters.charAt(rng.nextInt(characters.length()));
+	    }
+	    return new String(text);
+	}
+	public String generateUniqueString ()
+	{
+		String str = "abcdefghijklmnopqrstuvwxyz";
+		while(true)
+		{
+			String value = generateString (new Random(), str, 24);
+			if(!object_map.containsKey(value))
+			{
+				return value;
+			}
+		}
+	}
 	private  class ClientHandler extends Thread{
 		public Socket socket;
 		public Object callee;
@@ -99,6 +123,43 @@ public class SocketListening extends Thread{
 							parseArgs(msg);
 							ObjectOutputStream output = new ObjectOutputStream(socket.getOutputStream());
 							InvokeMessage reply = msg.invoke(callee);
+							Object obj = reply.return_value;
+							//if (obj.getClass().getInterfaces().)
+							boolean judge = false;
+							for (int i = 0; i< obj.getClass().getInterfaces().length ; i++)
+							{
+								for (int j = 0; j< obj.getClass().getInterfaces()[i].getInterfaces().length; j++)
+								{
+									System.out.println(obj.getClass().getInterfaces()[i].getInterfaces()[j].getSimpleName());
+									if (obj.getClass().getInterfaces()[i].getInterfaces()[j].getSimpleName().equals("MyRemote"))
+									{
+										judge = true;
+										break;
+									}
+								}
+								
+								
+							
+							}
+							if (judge == true)
+							{
+							//	System.out.println("123")
+								String interface_name = obj.getClass().toString();
+								
+								String [] args = interface_name.split(" ");
+								String new_interface_name = args[1] + "_Interface";
+								String value = generateUniqueString();
+								String address = server.getInetAddress().toString();
+								//System.out.println(address);
+								//System.out.println(new_interface_name);
+								RemoteObjectReference ror = new RemoteObjectReference(server.getInetAddress().toString(), 8001,
+										new_interface_name, value, new_interface_name+ "_stub", 8002);
+								object_map.put(value, obj);
+								//System.out.println()
+								reply.return_value = ror;
+								//String stub_name = args[1] + "_Interface_stub";
+								//System.out.println(ror.ipaddress);
+							}
 							
 							output.writeObject(reply);
 							output.flush();

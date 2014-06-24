@@ -5,12 +5,12 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.net.UnknownHostException;
 
-import Communcation.Client;
 import HelloWorld.HelloWorld;
 import HelloWorld.HelloWorld_Interface;
 import MyRemote.MyRemote;
 import RMIRegistry.RMINaming;
 import RMIRegistry.RegistryServer;
+import StubGenerator.Stub_compiler;
 
 public class Main {
 	public static void main(String[] args) throws UnknownHostException,
@@ -18,22 +18,23 @@ public class Main {
 		if (args[0].equals("server")) {
 
 			HelloWorld hello = new HelloWorld();
-			ServerInfo server = new ServerInfo(8003, 8004,  "127.0.0.1", 1099);
+		//System.out.println(hello.getClass().toString());
+			ServerInfo server = new ServerInfo(8001, 8002,  "127.0.0.1", 1099);
 			//System.out.println(server.clientForRig.getInetAddress().toString());
+		//	String ipaddress = server.socketListener.server.getInetAddress().toString();
+		//	System.out.println(ipaddress);
 			RemoteObjectReference ror = new RemoteObjectReference(
-					"127.0.0.1", 8003,
-					"HelloWorld.HelloWorld_Interface", "hello1", 
-					"HelloWorld,HelloWorld_Interface_stub", 8004);
-			//System.out.println(ror.ipaddress);
-			server.registerROR(ror.obj_name, ror, hello);
+					server.socketListener.server.getInetAddress().toString(), 8001,
+					"HelloWorld.HelloWorld_Interface", "hello", "HelloWorld,HelloWorld_Interface_stub", 8002);
+			
+			server.registerROR("hello", ror, hello);
 			// SocketListening server = new SocketListening (8001);
 
 			// Class<?> class_name =
 			// Class.forName("HelloWorld.HelloWorld_Interface");
 
-			// Stub_compiler compiler = new
-			// Stub_compiler("src/HelloWorld/HelloWorld_Interface.java");
-			// compiler.generate_stub();
+	//		 Stub_compiler compiler = new  Stub_compiler("src/HelloWorld/HelloWorld_Interface.java");
+	//		 compiler.generate_stub();
 
 			// SocketDownloading down = new SocketDownloading(8002);
 			// down.start();
@@ -53,21 +54,14 @@ public class Main {
 			name_server.ipaddress = "127.0.0.1";
 			name_server.port = 1099;
 			HelloWorld_Interface result = (HelloWorld_Interface)name_server.lookup("hello");
-			String value = result.hellowitharg("test1");
+			String value = result.hellowitharg("test");
 			System.out.println(value);
-			String value2 = result.hellowitharg("test2");
-			System.out.println(value2);
+			HelloWorld_Interface a = result.helloreturnobject();
+			//System.out.println(a.getClass().getSimpleName());
 			
-			
-			HelloWorld_Interface result1 = (HelloWorld_Interface)name_server.lookup("hello1");
-			String value3 = result1.hellowitharg("test3");
-			System.out.println(value3);
-			Client.cache.get("127.0.0.1:8003").socket.close();
-			String value4 = result1.hellowitharg("test4");
-			System.out.println(value4);
-			
-			
-			// HelloWorld_Interface a= new HelloWorld_Interface();
+			String value1 = a.hellowitharg("test1");
+			System.out.println(value1);
+			// Hell	oWorld_Interface a= new HelloWorld_Interface();
 			// HelloWorld_Interface hello = (HelloWorld_Interface)
 			// name_server.lookup("test");
 			// LinkedList<Character> list = new LinkedList<Character>();

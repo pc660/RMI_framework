@@ -7,6 +7,8 @@ import java.net.SocketException;
 import java.net.UnknownHostException;
 
 import Message.*;
+import MyRemote.MyRemote;
+import Server.RemoteObjectReference;
 public class Client extends comm{
 	
 	public static SocketCache cache = new SocketCache(1);
@@ -41,20 +43,34 @@ public class Client extends comm{
 				SocketInfo socket_info = cache.get(key);
 				if (socket_info.socket.isClosed())
 				{
+					//System.out.println("123");
 					return exceptionHandler(ipaddress, port, msg, key);
 				}
 				else{
+					//System.out.println("123");
+					//System.out.println(msg.method_name);
 					ObjectOutputStream output = new ObjectOutputStream(socket_info.socket.getOutputStream());
 					output.writeObject(msg);
 					output.flush();
 					ObjectInputStream input = new ObjectInputStream(socket_info.socket.getInputStream());
 					InvokeMessage reply = (InvokeMessage) input.readObject();
+					if (reply.return_value instanceof RemoteObjectReference)
+					{
+						//reply.return_value = (RemoteObjectReference)reply.return_value.
+						RemoteObjectReference ror = (RemoteObjectReference)reply.return_value ;
+						MyRemote remote  = ror.localize();
+						remote.setror(ror);
+						reply.return_value = remote;
+					//	System.out.println(ror.ipaddress);
+					}
+					
 					return reply.return_value;
 				}
 				
 			} catch (IOException e) {
 				
 				try {
+					
 					return exceptionHandler(ipaddress, port, msg, key);
 				} catch (UnknownHostException e1) {
 					// TODO Auto-generated catch block
@@ -114,12 +130,14 @@ public class Client extends comm{
 	public static Object exceptionHandler(String ipaddress, int port , InvokeMessage msg, String key) throws UnknownHostException, IOException, ClassNotFoundException
 	{
 		Socket socket = new Socket(ipaddress, port);
-		System.out.println("Exception handler");
+		//System.out.println(ipaddress);
+		//System.out.println("Exception handler");
 		ObjectOutputStream output = new ObjectOutputStream(socket.getOutputStream());
-		System.out.println(msg.method_name);
-		System.out.println(msg.args[0]);
+		//System.out.println(msg.method_name);
+		//System.out.println(msg.args[0]);
 		output.writeObject(msg);
 		output.flush();
+		//System.out.println(msg.method_name);
 		ObjectInputStream input = new ObjectInputStream(socket.getInputStream());
 		SocketInfo info = new SocketInfo (socket, output, input);
 		
@@ -132,7 +150,11 @@ public class Client extends comm{
 		
 		
 		InvokeMessage reply = (InvokeMessage) input.readObject();
-		
+		if (reply.return_value instanceof RemoteObjectReference)
+		{
+			//reply.return_value = (RemoteObjectReference)reply.return_value.
+			reply.return_value = reply.ror.localize();
+		}
 		System.out.println(reply.return_value);
 		return reply.return_value;
 	}

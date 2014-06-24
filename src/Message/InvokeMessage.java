@@ -53,6 +53,7 @@ public class InvokeMessage extends Message {
 		
 		try {
 			this.return_value = method.invoke(caller, this.args);
+			
 		} catch (IllegalArgumentException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -65,7 +66,12 @@ public class InvokeMessage extends Message {
 		}
 
 		InvokeMessage reply = new InvokeMessage();
+		
+		
+		
 		reply.return_value = this.return_value;
+		
+		
 		return reply;
 	}
 	

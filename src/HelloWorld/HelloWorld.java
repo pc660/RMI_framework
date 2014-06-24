@@ -60,5 +60,13 @@ public class HelloWorld implements HelloWorld_Interface{
 		return null;
 	}
 	
+	@Override
+	public HelloWorld_Interface helloreturnobject ()
+	{
+		System.out.println("return helloworld");
+		HelloWorld a = new HelloWorld();
+		return a;
+	}
+	
 
 }

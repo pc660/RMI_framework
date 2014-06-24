@@ -62,6 +62,7 @@ public class ServerInfo {
 		SocketListening socket = null;
 		try {
 			socket = new SocketListening (port);	
+			//System.out.println(socket.get)
 		//	socket.start();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

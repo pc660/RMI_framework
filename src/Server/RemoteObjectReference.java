@@ -38,6 +38,11 @@ public class RemoteObjectReference implements Serializable{
 		this.obj_name = obj_name;
 		this.Stub_URL = Stub_URL;
 		this.download_port = download_port;
+		if (ip.contains("0.0.0.0"))
+		{
+			this.ipaddress = "127.0.0.1";
+		}
+		
 	}
 	public RemoteObjectReference()
 	{
