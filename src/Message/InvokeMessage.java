@@ -5,8 +5,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 
-
-
 public class InvokeMessage extends Message {
 	public String method_name;
 	public Object[] args;
@@ -17,10 +15,7 @@ public class InvokeMessage extends Message {
 	public InvokeMessage()
 	{
 		super();
-		
-		
 	}
-	
 	
 	public InvokeMessage ( String function, Object[] args)
 	{
@@ -40,7 +35,6 @@ public class InvokeMessage extends Message {
 	public InvokeMessage invoke( Object caller)
 	{
 		Method method = null;
-	//	System.out.println(method_name);
 		try {
 			method = caller.getClass().getMethod(method_name, type);
 		} catch (SecurityException e) {
@@ -66,15 +60,7 @@ public class InvokeMessage extends Message {
 		}
 
 		InvokeMessage reply = new InvokeMessage();
-		
-		
-		
 		reply.return_value = this.return_value;
-		
-		
 		return reply;
 	}
-	
-	
-	
 }

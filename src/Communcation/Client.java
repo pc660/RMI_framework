@@ -23,7 +23,7 @@ public class Client extends comm{
 		ObjectInputStream input = new ObjectInputStream(socket.getInputStream());
 		LookupMessage reply = (LookupMessage) input.readObject();
 		System.out.println("Client say: recived '"+ reply.obj_name + "'from Rigster");
-		System.out.println(reply.ror);
+
 		
 		return reply;
 	}
@@ -43,12 +43,9 @@ public class Client extends comm{
 				SocketInfo socket_info = cache.get(key);
 				if (socket_info.socket.isClosed())
 				{
-					//System.out.println("123");
 					return exceptionHandler(ipaddress, port, msg, key);
 				}
 				else{
-					//System.out.println("123");
-					//System.out.println(msg.method_name);
 					ObjectOutputStream output = new ObjectOutputStream(socket_info.socket.getOutputStream());
 					output.writeObject(msg);
 					output.flush();
@@ -56,12 +53,10 @@ public class Client extends comm{
 					InvokeMessage reply = (InvokeMessage) input.readObject();
 					if (reply.return_value instanceof RemoteObjectReference)
 					{
-						//reply.return_value = (RemoteObjectReference)reply.return_value.
 						RemoteObjectReference ror = (RemoteObjectReference)reply.return_value ;
 						MyRemote remote  = ror.localize();
 						remote.setror(ror);
 						reply.return_value = remote;
-					//	System.out.println(ror.ipaddress);
 					}
 					
 					return reply.return_value;
@@ -95,12 +90,7 @@ public class Client extends comm{
 		else
 		{
 			try {
-				System.out.println("Client say: no cache found, need to create it");
-				System.out.println("Client say: before add socket in cache, the len of cache is" + cache.len);
-				System.out.println(ipaddress);
-				System.out.println(port);
-				Socket socket = new Socket(ipaddress, port);
-				
+				Socket socket = new Socket(ipaddress, port);	
 				ObjectOutputStream output = new ObjectOutputStream(socket.getOutputStream());
 				output.writeObject(msg);
 				output.flush();
@@ -108,8 +98,6 @@ public class Client extends comm{
 				SocketInfo info = new SocketInfo (socket, output, input);
 				cache.set(key, info);
 				InvokeMessage reply = (InvokeMessage) input.readObject();
-				System.out.println("Client say: after add socket in cache, the len of cache is" + cache.len);
-
 				return reply.return_value;
 				
 			} catch (UnknownHostException e) {
@@ -130,32 +118,17 @@ public class Client extends comm{
 	public static Object exceptionHandler(String ipaddress, int port , InvokeMessage msg, String key) throws UnknownHostException, IOException, ClassNotFoundException
 	{
 		Socket socket = new Socket(ipaddress, port);
-		//System.out.println(ipaddress);
-		//System.out.println("Exception handler");
 		ObjectOutputStream output = new ObjectOutputStream(socket.getOutputStream());
-		//System.out.println(msg.method_name);
-		//System.out.println(msg.args[0]);
 		output.writeObject(msg);
 		output.flush();
-		//System.out.println(msg.method_name);
 		ObjectInputStream input = new ObjectInputStream(socket.getInputStream());
-		SocketInfo info = new SocketInfo (socket, output, input);
-		
-		
-		
-		cache.set(key, info);
-		
-		
-		
-		
-		
+		SocketInfo info = new SocketInfo (socket, output, input);		
+		cache.set(key, info);	
 		InvokeMessage reply = (InvokeMessage) input.readObject();
 		if (reply.return_value instanceof RemoteObjectReference)
 		{
-			//reply.return_value = (RemoteObjectReference)reply.return_value.
 			reply.return_value = reply.ror.localize();
 		}
-		System.out.println(reply.return_value);
 		return reply.return_value;
 	}
 }

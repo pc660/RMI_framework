@@ -46,7 +46,5 @@ public class Server {
 		}
 
 
-	//	socketListener.object_map.put(name, ror);
-	//	System.out.println("Server: ror sent");
 	}
 }

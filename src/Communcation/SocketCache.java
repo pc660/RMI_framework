@@ -12,7 +12,6 @@ public class SocketCache {
 	{
 		String key;
 		public Socket socket;
-	//	public long Timestamp;
 		public ObjectOutputStream output;
 		public ObjectInputStream input;
 		public DoubleLinkedListNode pre;
@@ -22,7 +21,6 @@ public class SocketCache {
 			socket = s.socket;
 			output = s.output;
 			input = s.input;
-	//		Timestamp = System.currentTimeMillis();
 		}
 		
 		
@@ -83,8 +81,7 @@ public class SocketCache {
 	
 	
 	
-	//private HashMap<Integer, DoubleLinkedListNode> map  = new HashMap<Integer, DoubleLinkedListNode>();
-	//LinkedList<SocketInfo>.Entry a ;
+
 	public SocketCache (int size)
 	{
 		cache_hash = new HashMap<String, DoubleLinkedListNode> ();
@@ -102,25 +99,17 @@ public class SocketCache {
 			oldNode.output = value.output;
 			InvokeMessage msg = new InvokeMessage ();
 			msg.method_name = null;
-			/*try {
-				output.writeObject(msg);
-			} catch (IOException e) {
-				System.out.println("Cannot connect to server");
-				e.printStackTrace();
-			}*/
 			removeNode(oldNode);
 			setHead(oldNode);
 		} else {
 			
 			DoubleLinkedListNode newNode = new DoubleLinkedListNode(key, value);
-			System.out.println(len);
-			System.out.println(capacity);
+
 			if (len < capacity) {
 				setHead(newNode);
 				cache_hash.put(key, newNode);
 				len++;
 			} else {
-				//System.out.println(end.key);
 				cache_hash.remove(end.key);
 				end = end.pre;
 				if (end != null) {

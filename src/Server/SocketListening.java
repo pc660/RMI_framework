@@ -24,7 +24,6 @@ public class SocketListening extends Thread{
 	{
 		server = new ServerSocket (port);
 		object_map = new HashMap<String, Object>();
-		//System.out.println(server.);
 	}
 	
 	
@@ -56,12 +55,9 @@ public class SocketListening extends Thread{
 		{
 			if (args[i] instanceof RemoteObjectReference)
 			{
-				System.out.println("This is a remote reference");
 				args[i] = object_map.get( (  (RemoteObjectReference)args[i] ).get_obj_name());
 				msg.type[i] = args[i].getClass().getInterfaces()[0];
-			//	System.out.println(msg.type[i].getSimpleName());
 			}
-			//System.out.println(args[i].getClass().getSimpleName());
 		}
 	}
 	public  String generateString(Random rng, String characters, int length)
@@ -116,7 +112,6 @@ public class SocketListening extends Thread{
 					    if (msg.method_name == null)
 					    	break;
 						String obj_name = msg.obj_name();
-						System.out.println(obj_name);
 						if (object_map.containsKey(obj_name))
 						{
 							this.callee = object_map.get(obj_name);
@@ -130,7 +125,6 @@ public class SocketListening extends Thread{
 							{
 								for (int j = 0; j< obj.getClass().getInterfaces()[i].getInterfaces().length; j++)
 								{
-									System.out.println(obj.getClass().getInterfaces()[i].getInterfaces()[j].getSimpleName());
 									if (obj.getClass().getInterfaces()[i].getInterfaces()[j].getSimpleName().equals("MyRemote"))
 									{
 										judge = true;
@@ -143,28 +137,20 @@ public class SocketListening extends Thread{
 							}
 							if (judge == true)
 							{
-							//	System.out.println("123")
 								String interface_name = obj.getClass().toString();
 								
 								String [] args = interface_name.split(" ");
 								String new_interface_name = args[1] + "_Interface";
 								String value = generateUniqueString();
 								String address = server.getInetAddress().toString();
-								//System.out.println(address);
-								//System.out.println(new_interface_name);
 								RemoteObjectReference ror = new RemoteObjectReference(server.getInetAddress().toString(), 8001,
 										new_interface_name, value, new_interface_name+ "_stub", 8002);
 								object_map.put(value, obj);
-								//System.out.println()
 								reply.return_value = ror;
-								//String stub_name = args[1] + "_Interface_stub";
-								//System.out.println(ror.ipaddress);
 							}
-							
 							output.writeObject(reply);
 							output.flush();
 							System.out.println("Call finished");
-						//	output.close();
 						}
 						
 					} catch (IOException e) {

@@ -34,14 +34,11 @@ public class SocketDownloading extends Thread{
 				BufferedReader in = new BufferedReader(new InputStreamReader(client.getInputStream()));
 				PrintWriter out = new PrintWriter(new OutputStreamWriter(client.getOutputStream()));
 				String response = in.readLine();
-				System.out.println(response);
 				String fileName = "./bin/"+ response + ".class";
-				//File file = new File(fileName);
 				BufferedReader br = new BufferedReader(new FileReader(fileName));
 				
 				while(( response = br.readLine() ) != null)	
 				{
-					System.out.println(response);
 					out.write(response + "\n");
 					out.flush();
 				}

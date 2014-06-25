@@ -44,18 +44,11 @@ public class RegistryServer extends Thread{
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				
-
-			}
-			
-			
-		}
-		
-		
+			}		
+		}	
 	}
 	private void read_ror_map ()
 	{
-		//File file = new File (log_file);
 		try {
 			FileInputStream in = new FileInputStream(log_file);
 			ObjectInputStream input = new ObjectInputStream (in);
@@ -64,10 +57,8 @@ public class RegistryServer extends Thread{
 		} catch (FileNotFoundException e) {
 			ror_map = new HashMap<String, RemoteObjectReference> ();
 			// TODO Auto-generated catch block
-			//e.printStackTrace();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			//e.printStackTrace();
 			ror_map = new HashMap<String, RemoteObjectReference> ();
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
@@ -79,7 +70,6 @@ public class RegistryServer extends Thread{
 	
 	public RegistryServer()
 	{
-	//	ror_map = new HashMap<String, RemoteObjectReference> ();
 		read_ror_map();
 		try {
 			socket = new ServerSocket(this.port);
@@ -92,8 +82,7 @@ public class RegistryServer extends Thread{
 	}
 	@Override
 	public void run()
-	{
-			
+	{		
 			System.out.println("Registry Server begins to work");
 			while(true)
 			{
@@ -107,12 +96,8 @@ public class RegistryServer extends Thread{
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 					continue;
-				}
-				
+				}	
 			}
-			
-		
-		
 	}
 	private class socket_handler extends Thread
 	{
@@ -124,28 +109,16 @@ public class RegistryServer extends Thread{
 		@Override
 		public void run()
 		{
-			try {
-				
-				System.out.println("SocketHandler: try to get input stream");
+			try {		
 				ObjectInputStream input =  new ObjectInputStream(client.getInputStream());
-				System.out.println("SocketHandler:got input stream");
-				Object obj = input.readObject();
-				System.out.println("SocketHandler:got input object");
-				//System.out.println(obj);
-				
-				
+				Object obj = input.readObject();	
 				Class<?> name = obj.getClass();
 				
 				if (name.getSimpleName().equals("LookupMessage"))
 				{
 					//deal with look up
 					LookupMessage look = (LookupMessage) obj;
-					System.out.println(look.obj_name);
-					System.out.println(ror_map);
 					String obj_name = look.obj_name;
-					//System.out.println(obj_name);
-					
-					
 					if (ror_map.containsKey(obj_name))
 					{
 						RemoteObjectReference ror = ror_map.get(obj_name);

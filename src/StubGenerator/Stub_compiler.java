@@ -32,7 +32,7 @@ public class Stub_compiler {
 		return_type = new ArrayList<String> ();
 		interface_name = 	new ArrayList<String> ();
 	}
-	
+
 	public void generate_stub ()
 	{
 		try {
@@ -42,22 +42,20 @@ public class Stub_compiler {
 			output = new File (name + "_stub.java");
 			FileWriter fw = new FileWriter(output.getAbsoluteFile());
 			BufferedWriter bw = new BufferedWriter(fw);
-			//BufferedWriter bw = null;
-		
+
 			generatePackage(bw);
 			generateImport(bw);
 			generateInterface(bw);
 			generateInvoke(bw);
 			generateROR ( bw);
-			//System.out.println("}");
 			bw.write("}");
 			bw.close();
-			
+
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 	}
 	private String removeString2(String s)
 	{
@@ -113,26 +111,21 @@ public class Stub_compiler {
 			}
 		}
 		str = str.trim();
-	//	System.out.println(str);
 		return str ;
 	}
 	public ArrayList<String> parseInterface(String s)
 	{
-	
+
 		int pos = s.indexOf("(");
 		String str = s.substring(pos + 1, s.length() - 1);
-		//int i = 0;
 		String name = ""; 
 		int count = 0;
 		String ss = removeString (str);
 		ArrayList<String> parameter_name = parseString (ss);
-		//for (int i = 0;i < parameter_name.size(); i++)
-		//	System.out.println(parameter_name.get(i));
 		return parameter_name;
 	}
 	public void generatePackage(BufferedWriter bw) throws IOException
 	{
-	//	System.out.println(package_code);
 		bw.write(package_code);
 		bw.write(";\n");
 	}
@@ -141,57 +134,24 @@ public class Stub_compiler {
 		for (String s : import_code){
 			bw.write(s);
 			bw.write(";\n");
-			//System.out.println(s);
 		}
 		bw.write("import Message.InvokeMessage; \n");
 		bw.write("import Server.RemoteObjectReference;\n");
 		bw.write("import Communcation.Client;\n");
-		//System.out.println("import Message.InvokeMessage; ");
-		//System.out.println("import Server.RemoteObjectReference;");
-		//System.out.println("import Communcation.Client;");
 	}
 	public void generateInvoke (BufferedWriter bw) throws IOException
 	{
-		/*public Object invoke(String function, Object[] args)
-		{
-			InvokeMessage message = new InvokeMessage(function, args);
-			System.out.println(this.ror.ipaddress);
-			System.out.println(this.ror.port);
-			message.ror = this.ror;
-			//message.obj = obj;
-			//Object return_value = null;
-			//return return_value;
-			Object return_value = Client.connect_to_server(message);
-			return return_value;
-		}*/
 		bw.write("	public Object invoke(String function, Object[] args){\n");
 		bw.write("		InvokeMessage message = new InvokeMessage(function, args);\n");
 		bw.write("		message.ror = this.ror;\n");
 		bw.write("		Object return_value = Client.connect_to_server(message);\n");
 		bw.write("		return return_value;\n");
 		bw.write("	}\n");
-		//System.out.println("	public Object invoke(String function, Object[] args){");
-		//System.out.println("		InvokeMessage message = new InvokeMessage(function, args);");
-		//System.out.println("		message.ror = this.ror;");
-		//System.out.println("		Object return_value = Client.connect_to_server(message);");
-		//System.out.println("		return return_value;");
-		//System.out.println("	}");
-		
+
 	}
-	
+
 	public void generateROR (BufferedWriter bw) throws IOException
 	{
-		/*@Override
-		public void setror(RemoteObjectReference obj) {
-			this.ror = obj;
-			
-		}
-
-		@Override
-		public RemoteObjectReference getror() {
-			// TODO Auto-generated method stub
-			return this.ror;
-		}*/
 		bw.write("	@Override\n");
 		bw.write("	public void setror(RemoteObjectReference obj) {\n");
 		bw.write("		this.ror = obj;\n");
@@ -201,16 +161,8 @@ public class Stub_compiler {
 		bw.write("	public RemoteObjectReference getror() {\n");
 		bw.write("		return this.ror;\n");
 		bw.write("	}\n");
-		//System.out.println("	@Override");
-		//System.out.println("	public void setror(RemoteObjectReference obj) {");
-		//System.out.println("		this.ror = obj;");
-		//System.out.println("	}");
-		//System.out.println("	@Override");
-		//System.out.println("	public RemoteObjectReference getror() {");
-		//System.out.println("		return this.ror;");
-		//System.out.println("	}");
 	}
-	
+
 	public void generateInterface (BufferedWriter bw) throws IOException
 	{
 		String [] args = fileName.split("/");
@@ -218,15 +170,11 @@ public class Stub_compiler {
 		name = name.substring(0, name.length() -5 );
 		bw.write("public class " + name + "_stub" + " implements "  + name + "{\n");
 		bw.write("	RemoteObjectReference ror;\n");
-		//System.out.println("public class " + name + "_stub" + " implements "  + name + "{");
-		//System.out.println("	RemoteObjectReference ror;");
 		int count = 0;
 		for (String s :interface_code)
 		{
 			bw.write("	@Override\n");
 			s = s.trim();
-			//System.out.println("	@Override");
-			//System.out.println("	" + s+"{");
 			bw.write("	" + s + "{\n");
 			ArrayList<String> parameter_name  = parseInterface (s);
 			String parameters = "{ ";
@@ -235,16 +183,8 @@ public class Stub_compiler {
 			for (int i = 1 ; i < parameter_name.size() ; i = i+2)
 			{
 				try {
-					
-					 String str = Class.forName(new_package_code + "."+parameter_name.get(i-1)).getInterfaces()[0].getSimpleName();
-					
-//					System.out.println();
-					
-					//class_name.newInstance();
-				//	class_name.
-				//	Object a =class_name.newInstance();
-				//	String str = a.getClass().getSuperclass().toString();
-				//	System.out.println(str);
+
+					String str = Class.forName(new_package_code + "."+parameter_name.get(i-1)).getInterfaces()[0].getSimpleName();
 					if (str.equals("MyRemote"))
 					{
 						parameters = parameters +  parameter_name.get(i) + ".getror()," ;
@@ -256,23 +196,19 @@ public class Stub_compiler {
 					}
 				} catch (ClassNotFoundException e) {
 					// TODO Auto-generated catch block
-					//System.out.println("Falied to generate stub because "+ new_package_code + "."+parameter_name.get(i-1)+ " class not found");
 					parameters = parameters + parameter_name.get(i);
 					parameters += ",";
-					
+
 				} 
-				
-				
+
+
 			}
 			parameters = parameters.substring(0, parameters.length()-1);
 			parameters += "}";
 			bw.write("		Object []args = " + parameters + ";\n");
-			//System.out.println("		Object []args = " + parameters + ";");
 			bw.write("		return (" + return_type.get(count) + ") invoke(\"" + interface_name.get(count) + "\", args);\n");
-			//System.out.println("		return (" + return_type.get(count) + ") invoke(\"" + interface_name.get(count) + "\", args);");
 			count ++ ;
 			bw.write("	}\n");
-//			System.out.println("	}");
 		}
 	}
 	private ArrayList<String>  parseString (String line)
@@ -292,9 +228,9 @@ public class Stub_compiler {
 			else
 			{
 				results.add(s);
-			//	System.out.println(s);
+				//	System.out.println(s);
 				s = "";
-				
+
 				while(i < line.length())
 				{
 					if (line.charAt(i) == ' ' || line.charAt(i) == '	')
@@ -302,79 +238,70 @@ public class Stub_compiler {
 						i++;
 					}
 					else{
-//						System.out.println(line.charAt(i));
+						//						System.out.println(line.charAt(i));
 						break;
-						
+
 					}
-					}
-				
+				}
+
 			}
 		}
 		results.add(s);
-		//System.out.println(i);
-		//if (line.charAt( i-2 ) != ' ' || line.charAt(  i-2 ) != '	' )
-		//	results.add(s);
 		return results;
 	}
 	private void readFile( String file ) throws IOException {
-	    BufferedReader reader = new BufferedReader( new FileReader (file));
-	    String         line = null;
-	    StringBuilder  stringBuilder = new StringBuilder();
-	//    String         ls = System.getProperty("line.separator");
+		BufferedReader reader = new BufferedReader( new FileReader (file));
+		String         line = null;
+		StringBuilder  stringBuilder = new StringBuilder();
+		while( ( line = reader.readLine() ) != null ) {
+			stringBuilder.append(line);
+		}
+		String contents = stringBuilder.toString();
+		String []args = contents.split(";");
+		for (String s : args)
+		{
+			s = s.trim();
+			ArrayList<String> results  = parseString(s);
 
-	    while( ( line = reader.readLine() ) != null ) {
-	    //	String [] args = line.split(" ");
-	    //	System.out.println(line);
-	    	stringBuilder.append(line);
-	  //      stringBuilder.append( ls );
-	    }
-	    String contents = stringBuilder.toString();
-	    String []args = contents.split(";");
-	    for (String s : args)
-	    {
-	    	//System.out.println(s);
-	    	s = s.trim();
-	    	ArrayList<String> results  = parseString(s);
-	    	
-	    	for (String ss:results)
-	    	{
-	    		
-	    		//System.out.println(ss);
-	    		if (ss.equals("package")){
-	    			package_code = s;
-	    			break;
-	    		}
-	    		else if (ss.equals("import"))
-	    		{
-	    			import_code.add(s);
-	    			break;
-	    		}
-	    		else if (ss.equals("interface"))
-	    		{
-	    			int pos = s.indexOf("{");
-	    			String str = s.substring(pos+1);
-	    			interface_code.add(str);
-	    			str = removeString2(str);
-	    			ArrayList<String> res = parseString (str);
-	    			return_type.add(res.get(1));
-	    			interface_name.add(res.get(2));
-	    			
-	    			break;
-	    		}
-	    		
-	    		else if (ss.equals("public")  && !s.contains("{"))
-	    		{
-	    			interface_code.add(s);
-	    			s = removeString2(s);
-	    			
-	    			ArrayList<String> res = parseString (s);
-	    			
-	    			return_type.add(res.get(1));
-	    			interface_name.add(res.get(2));
-	    			break;
-	    		}
-	    	}
-	    }
-	   
+			for (String ss:results)
+			{
+
+				//System.out.println(ss);
+				if (ss.equals("package")){
+					package_code = s;
+					break;
+				}
+				else if (ss.equals("import"))
+				{
+					import_code.add(s);
+					break;
+				}
+				else if (ss.equals("interface"))
+				{
+					int pos = s.indexOf("{");
+					String str = s.substring(pos+1);
+					interface_code.add(str);
+					str = removeString2(str);
+					ArrayList<String> res = parseString (str);
+					return_type.add(res.get(1));
+					interface_name.add(res.get(2));
+
+					break;
+				}
+
+				else if (ss.equals("public")  && !s.contains("{"))
+				{
+					interface_code.add(s);
+					s = removeString2(s);
+
+					ArrayList<String> res = parseString (s);
+
+					return_type.add(res.get(1));
+					interface_name.add(res.get(2));
+					break;
+				}
+			}
+		}
+
 	}
 }

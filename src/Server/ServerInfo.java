@@ -46,24 +46,18 @@ public class ServerInfo {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
 	}
 	
 	private SocketDownloading startDownload()
 	{
 		SocketDownloading socket = null;
-		
-		socket = new SocketDownloading (downloadport);	
-		//	socket.start();
-		
+		socket = new SocketDownloading (downloadport);			
 		return socket;
 	}
 	private SocketListening startASocket() {
 		SocketListening socket = null;
 		try {
 			socket = new SocketListening (port);	
-			//System.out.println(socket.get)
-		//	socket.start();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			System.out.println("Socket start failed");

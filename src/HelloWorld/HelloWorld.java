@@ -43,14 +43,12 @@ public class HelloWorld implements HelloWorld_Interface{
 			{
 				name = name + c;
 			}
-			System.out.println("say hello with reference");
 			return "say hello " + name;
 	}
 
 	@Override
 	public String hellowithROR(HelloWorld_Interface a) {
 		count ++;
-		System.out.println(count);
 		return "say hello "  + "reference" ;
 	}
 
@@ -63,7 +61,6 @@ public class HelloWorld implements HelloWorld_Interface{
 	@Override
 	public HelloWorld_Interface helloreturnobject ()
 	{
-		System.out.println("return helloworld");
 		HelloWorld a = new HelloWorld();
 		return a;
 	}
