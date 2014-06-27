@@ -1,5 +1,6 @@
 package RMIRegistry;
 import Message.LookupMessage;
+
 import Message.RegisterMessage;
 import Server.RemoteObjectReference;
 
@@ -13,10 +14,17 @@ import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.*;
+
+/*
+ * Registry server 
+ * we assume that we have one registry and several servers 
+ *
+ * */
 public class RegistryServer extends Thread{
 	public HashMap<String, RemoteObjectReference> ror_map;
 	private int port = 1099;
 	private ServerSocket socket;
+	//checkpoint file
 	public String log_file = "ror_map.obj";
 	private class checkpoint extends Thread
 	{
@@ -26,6 +34,7 @@ public class RegistryServer extends Thread{
 			while(true)
 			{
 				FileOutputStream out= null;
+				//write check point
 				try {
 					out = new FileOutputStream(log_file);
 					ObjectOutputStream outObj = new ObjectOutputStream(out);
@@ -47,6 +56,7 @@ public class RegistryServer extends Thread{
 			}		
 		}	
 	}
+	//read check point
 	private void read_ror_map ()
 	{
 		try {
@@ -99,6 +109,10 @@ public class RegistryServer extends Thread{
 				}	
 			}
 	}
+	
+	/*
+	 * class for handling messages from both client and server 
+	 * */
 	private class socket_handler extends Thread
 	{
 		Socket client;

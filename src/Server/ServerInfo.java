@@ -8,7 +8,10 @@ import java.io.ObjectOutputStream;
 import java.net.Socket;
 
 
-
+/*
+ * Informatino about the server
+ * and start all threads
+ * */
 public class ServerInfo {
 	public int port;
 	public SocketListening socketListener;
@@ -35,6 +38,7 @@ public class ServerInfo {
 		System.out.println("Server: get a clientForReg"+clientForRig.toString() );
 
 	}
+	//send register message to registry
 	
 	public  void registerROR(  String name, RemoteObjectReference ror, Object obj)
 	{
@@ -47,13 +51,14 @@ public class ServerInfo {
 			e.printStackTrace();
 		}
 	}
-	
+	//open download service
 	private SocketDownloading startDownload()
 	{
 		SocketDownloading socket = null;
 		socket = new SocketDownloading (downloadport);			
 		return socket;
 	}
+	//open client service
 	private SocketListening startASocket() {
 		SocketListening socket = null;
 		try {

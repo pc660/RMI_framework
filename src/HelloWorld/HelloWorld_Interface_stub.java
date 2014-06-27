@@ -40,7 +40,6 @@ public class HelloWorld_Interface_stub implements HelloWorld_Interface{
 		InvokeMessage message = new InvokeMessage(function, args);
 		message.ror = this.ror;
 		Object return_value = Client.connect_to_server(message);
-		
 		return return_value;
 	}
 	@Override

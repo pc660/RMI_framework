@@ -1,0 +1,4 @@
+cp -r src/ test/src/
+cd test
+rm bin/HelloWorld/HelloWorld_Interface_stub.class
+cd ..

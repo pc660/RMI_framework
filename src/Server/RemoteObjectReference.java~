@@ -1,8 +1,7 @@
 package Server;
 import java.io.BufferedReader;
+
 import java.io.BufferedWriter;
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
@@ -79,29 +78,17 @@ public class RemoteObjectReference implements Serializable{
 			return (MyRemote)obj;	
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
-			Object obj= null;
 			try {
 				System.out.println("Start downloading file:" + this.Interface_name + "_stub");
 				download(Stub_URL);
 				System.out.println("Finish downloading file");
-				name = Class.forName(this.Interface_name + "_stub");
-				obj = name.newInstance();
-				return (MyRemote)obj;	
+				
 			} catch (IOException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
-			} catch (ClassNotFoundException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			} catch (InstantiationException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			} catch (IllegalAccessException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
 			}
-			return (MyRemote) obj;
 			
+			e.printStackTrace();
 		} catch (InstantiationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -122,42 +109,37 @@ public class RemoteObjectReference implements Serializable{
 	 * */
 	public void download(String fileName) throws IOException
 	{
+		System.out.println(fileName);
 		Socket socket = new Socket (ipaddress, download_port);
-		DataInputStream in = new DataInputStream(socket.getInputStream());
+		
+		
+		
+		BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 		PrintWriter out = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()));
-		out.write(fileName + "\n");
+		out.write(fileName);;
 		out.flush();
 		String []args = fileName.split(".");
-		String directory = "";
+
 		
 		File file = new File("./bin/" + fileName + ".class" );
 		if (!file.exists()) {
 			file.createNewFile();
 		}
-		FileOutputStream output = new FileOutputStream(file);
+
+		FileWriter fw = new FileWriter(file.getAbsoluteFile());
+		BufferedWriter bw = new BufferedWriter(fw);
 		
-		//FileWriter fw = new FileWriter(file.getAbsoluteFile());
-		//BufferedWriter bw = new BufferedWriter(fw);
-
 		String response = "";
-		 byte[] buff = new byte[1024];
-		 byte[] resultBuff = new byte[0];
-
-		    
-		 int k = -1;
 		try {
-			 
-			 while((k = socket.getInputStream().read(buff, 0, buff.length)) > -1) {
-			        byte[] tbuff = new byte[resultBuff.length + k]; // temp buffer size = bytes already read + bytes last read
-			        System.arraycopy(resultBuff, 0, tbuff, 0, resultBuff.length); // copy previous bytes
-			        System.arraycopy(buff, 0, tbuff, resultBuff.length, k);  // copy current lot
-			        resultBuff = tbuff; // call the temp buffer as your result buff
-			    }
-			 System.out.println(resultBuff.length + " bytes read.");
-			 output.write(resultBuff);
-			 output.close();
+			while(( response = in.readLine() ) != null)	
+			{
+				
+				bw.write(response +"\n");
+					
+			}
+			bw.close();
 		} catch (IOException e) {
-			output.close();
+			bw.close();
 			e.printStackTrace();
 		}
 	}

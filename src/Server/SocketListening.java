@@ -15,7 +15,10 @@ import java.util.HashMap;
 import java.util.Random;
 
 import Message.InvokeMessage;
-
+/*
+ * read message from client
+ * 
+ * */
 public class SocketListening extends Thread{
 	public ServerSocket server; 
 	int port;
